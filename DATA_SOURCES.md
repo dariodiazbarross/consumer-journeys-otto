@@ -12,11 +12,12 @@ Use the official standalone **OTTO Recommender Systems Dataset, version 1**, pub
 
 Files: otto-recsys-train.jsonl (11,307,535,945 bytes) and otto-recsys-test.jsonl (750,426,722 bytes), according to the official metadata. The acquisition manifest records the actual ZIP size, member sizes, SHA-256, source commit, URL and UTC download date. Ingestion also hashes each uncompressed member.
 
+The archive downloaded on **2026-08-31 UTC** was **2,127,848,819 bytes** with SHA-256 `d2ff7ce4b709ab6bff96adda843e42c4d094ae17d510e84822e4a9d31bbca888`. The immutable machine-readable record is `reports/source_manifest.json`; `reports/ingestion.json` records each uncompressed JSONL hash after full streaming validation.
+
 Acquisition uses the public download endpoint without a registration, competition acceptance, token or account. Redirect URLs are not stored because they contain temporary download signatures. The script streams the archive to disk; ingestion streams JSONL members without extracting the 12 GB of text.
 
-The documented session is one user's activity within the train or test period, not a 30-minute visit. Official train and test users are disjoint. Documentation says training spans four weeks and test the next week; exact temporal boundaries are verified from timestamps before freezing the analysis.
+The documented session is one user's activity within the train or test period, not a 30-minute visit. Official train and test users are disjoint. Documentation says training spans four weeks and test the next week. Audited test coverage is `2022-08-28 22:00:00` to `2022-09-04 22:00:00` UTC as a half-open analytical period; exact observed extrema and all boundaries are in `reports/ingestion_test.json` and `reports/boundaries.json`.
 
 Original fields are session, aid, ts and type. Type labels are clicks, carts and orders; milliseconds are verified from timestamp ranges. No prices, categories, product names, demographics, inventory or exposure logs are inferred.
 
 See [DATA_LICENSE.md](DATA_LICENSE.md) for attribution, licensing and transformation disclosure. Only aggregate results and synthetic teaching examples are published.
-

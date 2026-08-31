@@ -44,8 +44,8 @@ def rank_split(split: str) -> None:
                        CASE WHEN p.repeat_share>=0.4 THEN 'repeat_heavy' ELSE 'broad_exploration' END AS exploration_group,
                        CASE
                          WHEN bool_and(coalesce(h.support,0)<5) THEN 'rare'
-                         WHEN bool_and(h.global_rank <= (SELECT ceil(count(*)*.01) FROM popularity)) THEN 'head'
-                         WHEN bool_or(coalesce(h.support,0)<5) OR bool_or(h.global_rank <= (SELECT ceil(count(*)*.01) FROM popularity)) THEN 'mixed'
+                         WHEN bool_and(coalesce(h.global_rank <= (SELECT ceil(count(*)*.01) FROM popularity), false)) THEN 'head'
+                         WHEN bool_or(coalesce(h.support,0)<5) OR bool_or(coalesce(h.global_rank <= (SELECT ceil(count(*)*.01) FROM popularity), false)) THEN 'mixed'
                          ELSE 'tail' END AS target_popularity_group
                 FROM evaluated e JOIN batch_prefixes p USING(session), unnest(p.targets) t(aid)
                 LEFT JOIN popularity h ON t.aid=h.aid
@@ -80,7 +80,7 @@ def _bootstrap(frame: pd.DataFrame, columns: list[str]) -> dict:
 
 
 def summarize_split(split: str) -> dict:
-    files = str(ROOT / f"data/processed/{split}/evaluation/*.parquet").replace("\\", "/")
+    files = sorted((ROOT / f"data/processed/{split}/evaluation").glob("*.parquet"))
     frame = pd.read_parquet(files)
     columns = [f"{m}_{metric}" for metric in ("recall", "mrr") for m in METHODS]
     base = _bootstrap(frame, columns)

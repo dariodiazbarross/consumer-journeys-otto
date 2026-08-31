@@ -42,6 +42,20 @@ def test_future_mutation_cannot_change_prefix_features(con, events):
     assert items_before.equals(items_after)
 
 
+def test_future_mutation_cannot_change_past_associations(con, events):
+    run_sql(con, "01_events.sql")
+    con.execute("SET VARIABLE history_end=5000")
+    run_sql(con, "03_item_history.sql")
+    run_sql(con, "05_transitions.sql")
+    before = con.sql("SELECT * FROM pair_counts ORDER BY ALL").df()
+    con.execute("UPDATE raw_events SET aid=123456 WHERE session=1 AND ts>=6000")
+    run_sql(con, "01_events.sql")
+    run_sql(con, "03_item_history.sql")
+    run_sql(con, "05_transitions.sql")
+    after = con.sql("SELECT * FROM pair_counts ORDER BY ALL").df()
+    assert before.equals(after)
+
+
 def test_temporal_history_filter(con, events):
     run_sql(con, "01_events.sql")
     con.execute("SET VARIABLE history_end=5000")
@@ -67,6 +81,14 @@ def test_metric_math_and_deterministic_ties(con):
     # Item ID is explicitly the final tie break in every ranking rule.
     sql = (ROOT / "sql/06_candidates.sql").read_text()
     assert sql.count("aid) AS") >= 6
+
+
+def test_out_of_order_source_is_normalized_by_timestamp(con):
+    con.execute("CREATE TABLE raw_events(session BIGINT, aid INTEGER, ts BIGINT, action TINYINT, event_index SMALLINT)")
+    con.executemany("INSERT INTO raw_events VALUES (?,?,?,?,?)", [(1,2,2000,0,0),(1,1,1000,0,1)])
+    run_sql(con, "01_events.sql")
+    assert con.sql("SELECT list(aid ORDER BY ordinal) FROM events").fetchone()[0] == [1,2]
+    assert con.sql("SELECT count(*) FROM events WHERE previous_source_ts>ts").fetchone()[0] == 1
 
 
 def test_config_and_seed_are_frozen():

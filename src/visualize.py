@@ -75,7 +75,7 @@ def create_figures() -> None:
     ax.set(title="Ablations show which information adds value\nPercentage-point Recall@20 differences; 95% paired bootstrap intervals", xlabel="Recall@20 difference (percentage points)", ylabel="")
     finish("05_ablation_differences")
 
-    f=test["failure_decomposition"]; vals=[f["candidate_recall"],f["ranking_lost_target_mass_c"],f["retrieval_lost_target_mass"]]
+    f=test["failure_decomposition"]; vals=[test["metrics"]["c_recall"]["estimate"],f["ranking_lost_target_mass_c"],f["retrieval_lost_target_mass"]]
     fig,ax=plt.subplots(figsize=(8,4.7)); ax.barh(["Reached by contextual top 20","Retrieved but ranked below 20","Absent from candidates"],np.array(vals)*100,color=[TEAL,ORANGE,GREY])
     ax.set(title="Candidate retrieval and ranking are separate failure modes\nDecomposition of target-item mass in final test", xlabel="Target-item mass (%)", ylabel="", xlim=(0,100))
     for i,v in enumerate(vals): ax.text(v*100+.8,i,f"{v*100:.1f}%",va="center")
