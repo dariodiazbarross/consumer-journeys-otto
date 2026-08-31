@@ -1,0 +1,26 @@
+{
+  "dataset": "OTTO Recommender Systems Dataset",
+  "version": 1,
+  "dataset_id": 2895394,
+  "dataset_version_id": 4991874,
+  "doi": "10.34740/KAGGLE/DSV/4991874",
+  "download_url": "https://www.kaggle.com/api/v1/datasets/download/otto/recsys-dataset?datasetVersionNumber=1",
+  "accessed_utc": "2026-08-31T21:04:24.784018+00:00",
+  "bytes": 2127848819,
+  "sha256": "d2ff7ce4b709ab6bff96adda843e42c4d094ae17d510e84822e4a9d31bbca888",
+  "source_repo_commit": "f404284240ac654d0b924b2fabec0aea7b23f168",
+  "members": [
+    {
+      "file": "otto-recsys-test.jsonl",
+      "uncompressed_bytes": 750426722,
+      "compressed_bytes": 127837364,
+      "zip_crc32": 1435384487
+    },
+    {
+      "file": "otto-recsys-train.jsonl",
+      "uncompressed_bytes": 11307535945,
+      "compressed_bytes": 2000011111,
+      "zip_crc32": 1572387568
+    }
+  ]
+}
