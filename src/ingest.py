@@ -1,17 +1,17 @@
 """Stream the original ZIP into bounded, whole-session Parquet partitions."""
+import hashlib
+import json
+import time
+import zipfile
 from array import array
 from collections import Counter
 from datetime import datetime, timezone
-import hashlib
-import json
 from pathlib import Path
-import time
-import zipfile
 
 import orjson
+import psutil
 import pyarrow as pa
 import pyarrow.parquet as pq
-import psutil
 
 ROOT = Path(__file__).resolve().parents[1]
 TYPES = {"clicks": 0, "carts": 1, "orders": 2}
