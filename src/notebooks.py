@@ -31,7 +31,9 @@ def create_notebooks() -> None:
     output = ROOT / "notebooks"; output.mkdir(exist_ok=True)
     setup = """import json
 from pathlib import Path
+
 import pandas as pd
+
 ROOT = Path.cwd().parent if Path.cwd().name == 'notebooks' else Path.cwd()
 def report(name): return json.loads((ROOT/'reports'/name).read_text())"""
     notebooks = {
@@ -45,12 +47,12 @@ def report(name): return json.loads((ROOT/'reports'/name).read_text())"""
         "02_consumer_journeys.ipynb": build("02 — Consumer journeys", "Describe depth, duration, repeat breadth and action-block transitions before recommendation evaluation.", [
             code(setup),
             code("a=report('data_audit.json')\npd.DataFrame(a['session_summary'])[['source','median_events','mean_events','median_duration_hours','mean_repeat_share']]"),
-            code("t=pd.DataFrame(a['action_block_transitions']); t.assign(transition_share=t.transitions/t.groupby(['source','source_action']).transitions.transform('sum')).query(\"source=='test'\").head(16)"),
+            code("t=pd.DataFrame(a['action_block_transitions'])\nt.assign(transition_share=t.transitions/t.groupby(['source','source_action']).transitions.transform('sum')).query(\"source=='test'\").head(16)"),
             markdown("![Journey depth](../figures/02_journey_depth.png)\n\n![Block transitions](../figures/03_action_transitions.png)")
         ], "## KEY FINDINGS\n\nJourney depth is strongly right-skewed; timestamp-block transitions are dominated by observable clicks, with carts, orders and mixed blocks kept distinct. Repeat share describes logged breadth, not loyalty or indecision.\n\n## LIMITATIONS\n\nActions lack price, category, availability and exposure context; blocks do not reveal within-timestamp order.\n\n## NEXT STEP\n\nCompare frozen popularity and recent-repeat baselines before adding context."),
         "03_recommendation_baselines.ipynb": build("03 — Recommendation baselines", "Examine temporal validation and the incremental, fixed-score strategy design.", [
             code(setup),
-            code("p=json.loads((ROOT/'config/protocol.json').read_text()); p"),
+            code("p=json.loads((ROOT/'config/protocol.json').read_text())\np"),
             code("v=report('results_validation.json')\npd.DataFrame([{'strategy':k.replace('_recall',''),'recall@20':x['estimate'],'lower':x['ci95'][0],'upper':x['ci95'][1]} for k,x in v['metrics'].items() if k.endswith('_recall')])"),
             markdown("The validation week checks temporal replication and pipeline behavior. It does not select a favorable target, candidate rule or metric.")
         ], "## KEY FINDINGS\n\nPopularity and recent repeat provide nontrivial benchmarks. Incremental strategies share the same candidate pool after repetition so the ablation isolates information used in ranking.\n\n## LIMITATIONS\n\nHand-set scores are transparent heuristics, not calibrated probabilities; validation is one week.\n\n## NEXT STEP\n\nEvaluate the untouched test week with paired uncertainty and diagnose retrieval versus ranking."),

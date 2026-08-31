@@ -1,0 +1,26 @@
+{
+  "verified_at_utc": "2026-08-31T22:38:32.549575+00:00",
+  "repositories": [
+    {
+      "repository": "dariodiazbarross/financial-fragility",
+      "id": 1352561183,
+      "default_branch": "main",
+      "head": "571f0c4afa415f4ec6bd6bbdb1581bf8f3c6b283",
+      "pushed_at": "2026-08-31T15:49:19Z",
+      "policy": "PERMANENTLY READ-ONLY",
+      "head_after": "571f0c4afa415f4ec6bd6bbdb1581bf8f3c6b283",
+      "unchanged": true
+    },
+    {
+      "repository": "dariodiazbarross/Founder-Personality-Investment-Score-FPIS-",
+      "id": 1060127756,
+      "default_branch": "main",
+      "head": "0263cf6cc3ae0e6c5b863d303c1d4f28924f76ba",
+      "pushed_at": "2025-09-19T15:44:40Z",
+      "policy": "PERMANENTLY READ-ONLY",
+      "head_after": "0263cf6cc3ae0e6c5b863d303c1d4f28924f76ba",
+      "unchanged": true
+    }
+  ],
+  "all_preexisting_heads_unchanged": true
+}

@@ -17,10 +17,10 @@ def audit() -> None:
     session_path = (ROOT / "data/interim/sessions/*/*.parquet").as_posix()
     transition_path = (ROOT / "data/interim/action_transitions/*/*.parquet").as_posix()
     con.execute(f"""CREATE VIEW all_sessions AS
-        SELECT * EXCLUDE(filename), CASE WHEN filename LIKE '%/train/%' THEN 'train' ELSE 'test' END AS source
+        SELECT * EXCLUDE(filename), CASE WHEN filename LIKE '%train%part-%' THEN 'train' ELSE 'test' END AS source
         FROM read_parquet('{session_path}', filename=true)""")
     con.execute(f"""CREATE VIEW transitions AS
-        SELECT * EXCLUDE(filename), CASE WHEN filename LIKE '%/train/%' THEN 'train' ELSE 'test' END AS source
+        SELECT * EXCLUDE(filename), CASE WHEN filename LIKE '%train%part-%' THEN 'train' ELSE 'test' END AS source
         FROM read_parquet('{transition_path}', filename=true)""")
     session_summary = query_dicts(con.sql("""
         SELECT source,

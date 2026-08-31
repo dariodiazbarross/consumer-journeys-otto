@@ -1,7 +1,9 @@
 """Create the seven case-study figures from compact, verified reports."""
-# ruff: noqa: E501, E701, E702, E741
+# ruff: noqa: E501, E701, E702, E741, I001
 import json
 
+import matplotlib
+matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd

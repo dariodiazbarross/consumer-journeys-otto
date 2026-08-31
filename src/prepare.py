@@ -133,7 +133,12 @@ def prepare(watch: bool = False, limit: int | None = None) -> None:
                 if limit and processed >= limit:
                     return
         complete = (ROOT / "reports/ingestion.json").exists()
-        if complete:
+        pending = any(
+            not (ROOT / f"data/interim/completed/{source}-{path.stem}.json").exists()
+            for source in ("train", "test")
+            for path in (ROOT / f"data/interim/events/{source}").glob("*.parquet")
+        )
+        if complete and not pending:
             for split in ("validation", "test"):
                 finalize_history(split)
             return

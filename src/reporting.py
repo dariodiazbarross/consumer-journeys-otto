@@ -48,7 +48,7 @@ Candidate retrieval reached {pct(test['failure_decomposition']['candidate_recall
 
     data_quality = f"""# Data quality and sample flow
 
-All source records were streamed and retained. The v1 ZIP is {audit['source_ingestion']['sources']['train']['parquet_bytes']+audit['source_ingestion']['sources']['test']['parquet_bytes']:,} bytes after event-Parquet conversion (the original archive is recorded separately). Source-order timestamp inversions were **{source['train']['out_of_order_events']+source['test']['out_of_order_events']:,}**; duplicate session keys were **{audit['duplicate_session_keys']:,}**.
+All source records were streamed and retained. Event Parquet totals {audit['source_ingestion']['sources']['train']['parquet_bytes']+audit['source_ingestion']['sources']['test']['parquet_bytes']:,} bytes (the original ZIP is recorded separately). Source-order timestamp inversions were **{source['train']['out_of_order_events']+source['test']['out_of_order_events']:,}**; duplicate session keys were **{audit['duplicate_session_keys']:,}**.
 
 | Source | Sessions | Events | Exact duplicate event tuples | Adjacent equal timestamps | Starts non-click |
 |---|---:|---:|---:|---:|---:|
