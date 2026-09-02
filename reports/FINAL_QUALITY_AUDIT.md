@@ -22,7 +22,7 @@ notebooks and ethics document distinguish description, prediction and causality.
 
 Candidate retrieval and ranking use separate grains and diagnostics. Targets never
 enter candidates; popularity, repeat and association baselines are deterministic;
-the fixed ablation isolates repetition, associations, then action/recency context.
+the fixed ablation isolates repeat-frequency scoring, associations, then action/recency context.
 Candidate recall, top-20 loss, coverage and item-history subgroups identify that
 retrieval, especially outside the historical head, deserves more attention than
 minor ranking refinements. V1 does not implement the proposed LightGBM extension.
@@ -37,7 +37,7 @@ without downloading raw data.
 
 ## Hiring Manager
 
-The case study shows judgement through a strong recent-repeat benchmark, resource
+The case study shows judgement through a strong recent-item benchmark, resource
 measurement before infrastructure choice, full-data processing on constrained
 hardware, honest ablations, error decomposition and explicit business boundaries.
 The recommendation is conditional: context adds offline predictive information,

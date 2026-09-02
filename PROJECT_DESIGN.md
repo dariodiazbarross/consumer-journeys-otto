@@ -7,8 +7,8 @@ freeze. The initial Git commit preserves this document. No metric-driven changes
 ## Question and estimand
 
 How much does recent behavioral context improve recommendation of products
-receiving the next cart or order action compared with popularity and recent-repeat
-strategies? The estimand is the **mean per-prefix Recall@20**, conditional on an
+receiving the next cart or order action compared with popularity and a recent-item
+baseline? The estimand is the **mean per-prefix Recall@20**, conditional on an
 observable next cart/order within 24 hours, for eligible official test sessions.
 This is offline prediction, not a treatment effect or revenue estimate.
 
@@ -86,8 +86,8 @@ items (unmatched sources contribute zero).
 |---|---|
 | Global popularity | Historical popularity descending |
 | Recent popularity (P) | Seven-day historical popularity descending |
-| Recent repeat | Seen items first, latest observed timestamp descending, count descending; recent then global popularity fallback |
-| + Repetition (R) | `r_i + 0.05 p_i` |
+| Recent-item baseline | Seen items first, latest observed timestamp descending, count descending; recent then global popularity fallback |
+| + Repeat-frequency score (R) | `r_i + 0.05 p_i` |
 | + Associations (RA) | `r_i + a_i + 0.05 p_i` |
 | + Action/recency context (C) | `r*_i + a*_i + 0.05 p_i` |
 
@@ -98,7 +98,7 @@ weights, divided by total prefix weight. These weights are transparent heuristic
 not measurements of intention or optimized business values. The methods are
 scores, not calibrated probabilities. All methods return at most 20 unique items.
 The popularity baselines use their own top-20 lists; R/RA/C share the candidate
-union so changes after R isolate ranking information. Recent repeat is a strong
+union so changes after R isolate ranking information. The recent-item baseline is a strong
 additional comparator, not hidden inside the ablation.
 
 ## Metrics and uncertainty
@@ -116,7 +116,7 @@ additional comparator, not hidden inside the ablation.
   One prefix per session avoids event-level pseudo-replication. Intervals are
   conditional on fitted historical tables and this observed week, not uncertainty
   over retraining, future weeks, or causal effects. No multiplicity-adjusted claims.
-- Compare every incremental step, C versus recent repeat, and C versus popularity.
+- Compare every incremental step, C versus the recent-item baseline, and C versus popularity.
   Report percentage-point differences and interval widths, including null results.
 
 ## Error and journey analyses
@@ -132,7 +132,7 @@ prefixes separate. Prefixes of exactly five versus more than five events; repeat
 share at least 40% versus lower; previous cart versus none; click-only versus
 other action history. Report N, Recall/MRR, candidate coverage and uncertainty;
 do not interpret groups with fewer than 100 prefixes. Bootstrap subgroup
-performance and C–recent-repeat differences. These are behavioral descriptions,
+performance and C-to-recent-item-baseline differences. These are behavioral descriptions,
 not psychological segments.
 
 ## Audit, exclusions and scale

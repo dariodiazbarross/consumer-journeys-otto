@@ -20,8 +20,8 @@ def pp(record: dict) -> str:
 
 
 def metric_table(results: dict) -> str:
-    labels = {"global":"Global popularity", "recent":"Recent popularity", "repeat":"Recent repeat",
-              "r":"+ Repetition", "ra":"+ Associations", "c":"+ Action/recency context"}
+    labels = {"global":"Global popularity", "recent":"Recent popularity", "repeat":"Recent-item baseline",
+              "r":"+ Repeat-frequency score", "ra":"+ Associations", "c":"+ Action/recency context"}
     lines = ["| Strategy | Recall@20 | MRR@20 |", "|---|---:|---:|"]
     for method, label in labels.items():
         recall, mrr = results["metrics"][f"{method}_recall"], results["metrics"][f"{method}_mrr"]
@@ -38,7 +38,7 @@ def write_reports() -> None:
     context_direction = "improved" if delta_repeat["estimate"] > 0 else "did not improve"
     executive = f"""# Executive summary
 
-Recent behavioral context **{context_direction} Recall@20 relative to the strong recent-repeat baseline by {pp(delta_repeat)}** on {flow['target_positive']:,} final-test prefixes with an observed target. Relative to recent popularity, the difference was {pp(delta_recent)}. These are offline predictive differences, not causal or revenue effects.
+Recent behavioral context **{context_direction} Recall@20 relative to the strong recent-item baseline by {pp(delta_repeat)}** on {flow['target_positive']:,} final-test prefixes with an observed target. Relative to recent popularity, the difference was {pp(delta_recent)}. These are offline predictive differences, not causal or revenue effects.
 
 The analysis processed all {source['train']['sessions']+source['test']['sessions']:,} source sessions and {source['train']['events']+source['test']['events']:,} events without sampling. A recommendation is made after five interactions (including the whole cutoff timestamp block); the target is the distinct item set at the first future cart/order timestamp within 24 hours. Historical features are fixed before each temporal period.
 
@@ -81,10 +81,10 @@ Final test contains {flow['eligible_after_time_and_horizon']:,} eligible prefixe
 
 Incremental Recall@20 differences:
 
-- Repetition after recent popularity: {pp(test['differences']['r_minus_recent_recall'])}.
-- Associations after repetition: {pp(test['differences']['ra_minus_r_recall'])}.
+- Repeat-frequency score after recent popularity: {pp(test['differences']['r_minus_recent_recall'])}.
+- Associations after the repeat-frequency score: {pp(test['differences']['ra_minus_r_recall'])}.
 - Action/recency context after associations: {pp(test['differences']['c_minus_ra_recall'])}.
-- Full context versus recent repeat: {pp(delta_repeat)}.
+- Full context versus the recent-item baseline: {pp(delta_repeat)}.
 
 Validation used the preceding week with independently frozen history. Full validation metrics are machine-readable in `reports/results_validation.json`; it is a temporal replication and pipeline check, not a score-shopping stage.
 
@@ -102,13 +102,16 @@ See `PROJECT_DESIGN.md`, `sql/`, the four executed notebooks and `ETHICS_AND_LIM
 
     readme = f"""# Beyond Popularity: Consumer Journeys and Contextual Recommendations
 
-**A SQL-first behavioral data science case study asking whether recent session context improves next cart/order recommendation over popularity and repeat baselines.**
+[![Analytical contracts](https://github.com/dariodiazbarross/consumer-journeys-otto/actions/workflows/ci.yml/badge.svg)](https://github.com/dariodiazbarross/consumer-journeys-otto/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/Code%20license-MIT-2A9D8F.svg)](LICENSE)
+
+**A SQL-first behavioral data science case study asking whether recent session context improves next cart/order recommendation over popularity and a recent-item baseline.**
 
 ![Incremental Recall@20](figures/04_incremental_recall.png)
 
 ## Executive finding
 
-On {flow['target_positive']:,} held-out positive test prefixes, full context {context_direction} Recall@20 versus recent repeat by **{pp(delta_repeat)}** and differed from recent popularity by **{pp(delta_recent)}**. Candidate retrieval covered {pct(test['failure_decomposition']['candidate_recall'])} of target-item mass. The result quantifies offline agreement under a fixed protocol; it does not estimate recommendation-caused conversion or revenue.
+On {flow['target_positive']:,} held-out positive test prefixes, full context {context_direction} Recall@20 versus the recent-item baseline by **{pp(delta_repeat)}** and differed from recent popularity by **{pp(delta_recent)}**. Candidate retrieval covered {pct(test['failure_decomposition']['candidate_recall'])} of target-item mass. The result quantifies offline agreement under a fixed protocol; it does not estimate recommendation-caused conversion or revenue.
 
 {metric_table(test)}
 
@@ -160,7 +163,7 @@ The subgroup report includes head, tail, rare and mixed target sets; exactly-fiv
 
 ## Business interpretation
 
-- Use recent popularity as a dependable cold/fallback layer and recent repeat as the operational complexity benchmark.
+- Use recent popularity as a dependable cold/fallback layer and the recent-item baseline as the operational complexity benchmark.
 - Add context only where the paired improvement, candidate coverage and latency justify it; the frozen ablation identifies the contributing signal.
 - If retrieval loss dominates, improve candidate sources before tuning ranking. If ranking loss dominates, better candidate scoring is the more direct next step.
 - Run a controlled online experiment with real exposure, inventory and guardrail logs before any claim about conversion, revenue, satisfaction or welfare.

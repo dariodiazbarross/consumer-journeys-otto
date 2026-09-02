@@ -60,7 +60,7 @@ def create_figures() -> None:
 
     test = load("results_test.json")
     methods = ["global","recent","repeat","r","ra","c"]
-    labels = ["Global pop.","Recent pop.","Recent repeat","+ Repetition","+ Associations","+ Action/recency"]
+    labels = ["Global pop.","Recent pop.","Recent-item\nbaseline","+ Repeat-frequency\nscore","+ Associations","+ Action/recency"]
     estimates = [test["metrics"][f"{m}_recall"]["estimate"]*100 for m in methods]
     intervals = [test["metrics"][f"{m}_recall"]["ci95"] for m in methods]
     errors = np.array([[e-l*100, u*100-e] for e,(l,u) in zip(estimates,intervals)]).T
@@ -70,7 +70,7 @@ def create_figures() -> None:
     finish("04_incremental_recall")
 
     names=["r_minus_recent_recall","ra_minus_r_recall","c_minus_ra_recall","c_minus_repeat_recall"]
-    labels2=["Repetition vs recent pop.","Associations after repetition","Action/recency after associations","Full context vs recent repeat"]
+    labels2=["Repeat-frequency vs recent pop.","Associations after repeat-frequency","Action/recency after associations","Full context vs recent-item baseline"]
     d=[test["differences"][n]["estimate"]*100 for n in names]; ci=[test["differences"][n]["ci95"] for n in names]
     xerr=np.array([[v-l*100,u*100-v] for v,(l,u) in zip(d,ci)]).T
     fig,ax=plt.subplots(figsize=(9,5)); ax.errorbar(d,labels2,xerr=xerr,fmt="o",color=TEAL,capsize=4,markersize=8); ax.axvline(0,color="#333",linewidth=1)
@@ -85,7 +85,7 @@ def create_figures() -> None:
 
     groups=pd.DataFrame(test["subgroups"]["target_popularity_group"]); order=[x for x in ["head","tail","rare","mixed"] if x in set(groups.group)]; groups=groups.set_index("group").loc[order]
     fig,ax=plt.subplots(figsize=(8.5,5)); x=np.arange(len(groups)); w=.36
-    ax.bar(x-w/2,groups.repeat_recall*100,w,label="Recent repeat",color=ORANGE); ax.bar(x+w/2,groups.c_recall*100,w,label="Full context",color=TEAL)
+    ax.bar(x-w/2,groups.repeat_recall*100,w,label="Recent-item baseline",color=ORANGE); ax.bar(x+w/2,groups.c_recall*100,w,label="Full context",color=TEAL)
     ax.set(title="Item history defines where recommendation is hardest\nRecall@20 by target popularity group; labels show evaluated prefixes", ylabel="Recall@20 (%)",xlabel="",xticks=x,xticklabels=[f"{v.title()}\nN={groups.loc[v,'n']:,}" for v in groups.index]); ax.legend(frameon=False)
     finish("07_popularity_errors")
 

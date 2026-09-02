@@ -1,19 +1,22 @@
 # Beyond Popularity: Consumer Journeys and Contextual Recommendations
 
-**A SQL-first behavioral data science case study asking whether recent session context improves next cart/order recommendation over popularity and repeat baselines.**
+[![Analytical contracts](https://github.com/dariodiazbarross/consumer-journeys-otto/actions/workflows/ci.yml/badge.svg)](https://github.com/dariodiazbarross/consumer-journeys-otto/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/Code%20license-MIT-2A9D8F.svg)](LICENSE)
+
+**A SQL-first behavioral data science case study asking whether recent session context improves next cart/order recommendation over popularity and a recent-item baseline.**
 
 ![Incremental Recall@20](figures/04_incremental_recall.png)
 
 ## Executive finding
 
-On 200,864 held-out positive test prefixes, full context improved Recall@20 versus recent repeat by **+6.48 pp (95% CI +6.37 to +6.59)** and differed from recent popularity by **+53.60 pp (95% CI +53.38 to +53.80)**. Candidate retrieval covered 56.12% of target-item mass. The result quantifies offline agreement under a fixed protocol; it does not estimate recommendation-caused conversion or revenue.
+On 200,864 held-out positive test prefixes, full context improved Recall@20 versus the recent-item baseline by **+6.48 pp (95% CI +6.37 to +6.59)** and differed from recent popularity by **+53.60 pp (95% CI +53.38 to +53.80)**. Candidate retrieval covered 56.12% of target-item mass. The result quantifies offline agreement under a fixed protocol; it does not estimate recommendation-caused conversion or revenue.
 
 | Strategy | Recall@20 | MRR@20 |
 |---|---:|---:|
 | Global popularity | 0.53% [0.50%, 0.56%] | 0.15% [0.14%, 0.16%] |
 | Recent popularity | 0.77% [0.73%, 0.81%] | 0.38% [0.35%, 0.40%] |
-| Recent repeat | 47.90% [47.68%, 48.11%] | 40.56% [40.36%, 40.76%] |
-| + Repetition | 47.90% [47.68%, 48.11%] | 32.69% [32.52%, 32.86%] |
+| Recent-item baseline | 47.90% [47.68%, 48.11%] | 40.56% [40.36%, 40.76%] |
+| + Repeat-frequency score | 47.90% [47.68%, 48.11%] | 32.69% [32.52%, 32.86%] |
 | + Associations | 54.46% [54.24%, 54.66%] | 33.60% [33.42%, 33.76%] |
 | + Action/recency context | 54.38% [54.16%, 54.58%] | 35.63% [35.45%, 35.80%] |
 
@@ -65,7 +68,7 @@ The subgroup report includes head, tail, rare and mixed target sets; exactly-fiv
 
 ## Business interpretation
 
-- Use recent popularity as a dependable cold/fallback layer and recent repeat as the operational complexity benchmark.
+- Use recent popularity as a dependable cold/fallback layer and the recent-item baseline as the operational complexity benchmark.
 - Add context only where the paired improvement, candidate coverage and latency justify it; the frozen ablation identifies the contributing signal.
 - If retrieval loss dominates, improve candidate sources before tuning ranking. If ranking loss dominates, better candidate scoring is the more direct next step.
 - Run a controlled online experiment with real exposure, inventory and guardrail logs before any claim about conversion, revenue, satisfaction or welfare.

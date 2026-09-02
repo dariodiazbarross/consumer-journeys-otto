@@ -8,17 +8,17 @@ Final test contains 632,645 eligible prefixes; 200,864 have an observed first fu
 |---|---:|---:|
 | Global popularity | 0.53% [0.50%, 0.56%] | 0.15% [0.14%, 0.16%] |
 | Recent popularity | 0.77% [0.73%, 0.81%] | 0.38% [0.35%, 0.40%] |
-| Recent repeat | 47.90% [47.68%, 48.11%] | 40.56% [40.36%, 40.76%] |
-| + Repetition | 47.90% [47.68%, 48.11%] | 32.69% [32.52%, 32.86%] |
+| Recent-item baseline | 47.90% [47.68%, 48.11%] | 40.56% [40.36%, 40.76%] |
+| + Repeat-frequency score | 47.90% [47.68%, 48.11%] | 32.69% [32.52%, 32.86%] |
 | + Associations | 54.46% [54.24%, 54.66%] | 33.60% [33.42%, 33.76%] |
 | + Action/recency context | 54.38% [54.16%, 54.58%] | 35.63% [35.45%, 35.80%] |
 
 Incremental Recall@20 differences:
 
-- Repetition after recent popularity: +47.13 pp (95% CI +46.92 to +47.33).
-- Associations after repetition: +6.56 pp (95% CI +6.45 to +6.67).
+- Repeat-frequency score after recent popularity: +47.13 pp (95% CI +46.92 to +47.33).
+- Associations after the repeat-frequency score: +6.56 pp (95% CI +6.45 to +6.67).
 - Action/recency context after associations: -0.08 pp (95% CI -0.11 to -0.06).
-- Full context versus recent repeat: +6.48 pp (95% CI +6.37 to +6.59).
+- Full context versus the recent-item baseline: +6.48 pp (95% CI +6.37 to +6.59).
 
 Validation used the preceding week with independently frozen history. Full validation metrics are machine-readable in `reports/results_validation.json`; it is a temporal replication and pipeline check, not a score-shopping stage.
 
